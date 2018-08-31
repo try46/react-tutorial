@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
-// eslint-disable-next-line no-unused-vars
-function Square (props) {
+
+function Square (props) {// eslint-disable-next-line no-unused-vars
   return (
     <button className="square" onClick={props.onClick}>
       {props.value}
@@ -22,6 +22,7 @@ class Square extends React.Component {
   }
 }
 **/
+
 // eslint-disable-next-line no-unused-vars
 class Board extends React.Component {
   constructor (props) {
@@ -46,7 +47,7 @@ class Board extends React.Component {
   renderSquare (i) {
     return (<Square
       value={this.state.squares[i]}
-      onClick={() => this.handleClick(i)}
+      onClick={() => this.props.onClick(i)}
     />
     )
   }
@@ -84,14 +85,36 @@ class Board extends React.Component {
 }
 // eslint-disable-next-line no-unused-vars
 class Game extends React.Component {
+  constructor(props){
+    super(props);
+    this.state={
+      history: [{
+        squares: Array(9).fill(null),
+      }],
+      xIsNext: true,
+    };
+  }
   render () {
+    const history = this.state.history;
+    const current = history[history.keys -1];
+    const winner = calculateWinner(current.squares);
+    let status;
+    if (winner) {
+      status = 'Winner: ' + winner;
+    } else {
+      status = 'Next Player: ' +
+      (this.state.xIsNext ? 'X' : '0');
+    }
     return (
       <div className="game">
         <div className="game-board">
-          <Board />
+          <Board 
+            squares={current.squares}
+            onClick={(i)=> this.handleClick(i)}
+          />
         </div>
         <div className="game-info">
-          <div>{/* status */}</div>
+          <div>{status}</div>
           <ol>{/* TODO */}</ol>
         </div>
       </div>
